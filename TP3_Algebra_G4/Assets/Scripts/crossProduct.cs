@@ -11,6 +11,7 @@ public class CrossProduct : MonoBehaviour
     {
         Mesh mesh = GetComponentInChildren<MeshFilter>().mesh;
         Vector3[] vertices = mesh.vertices;
+        //guarda los indices en orden para iterar los triangulos correctamente
         int[] triangles = mesh.triangles;
 
         // Obtener el centro del modelo en coordenadas globales
@@ -25,6 +26,8 @@ public class CrossProduct : MonoBehaviour
             Vector3 vertex1 = transform.TransformPoint(vertices[index1]);
             Vector3 vertex2 = transform.TransformPoint(vertices[index2]);
             Vector3 vertex3 = transform.TransformPoint(vertices[index3]);
+
+            //REPASAR A PARTIR DE ACÁ!
 
             // Calcular el centro de la cara (en espacio global)
             Vector3 faceCenter = (vertex1 + vertex2 + vertex3) / 3;
