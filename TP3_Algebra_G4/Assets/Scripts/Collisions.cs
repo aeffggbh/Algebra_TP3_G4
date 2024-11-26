@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,7 +18,7 @@ public class Collisions : MonoBehaviour
     Vector3 max1;
     Vector3 max2;
 
-    private void Awake()
+    private void Start()
     {
         GameObject tempObj = GameObject.Find("CubicGrid");
         gridAux = tempObj.GetComponent<CubicalGrid>();
@@ -52,6 +53,16 @@ public class Collisions : MonoBehaviour
         min2 = Vector3.zero;
         max1 = Vector3.zero;
         max2 = Vector3.zero;
+
+        //Setup Geometry
+
+        for (int i = 0; i < objects.Count; i++)
+        {
+            Geometry.Polygon poly = new(objects[i].GetComponent<Shape>().vertices);
+            Geometry.PolygonProcess polyProcess = new(poly);
+
+            objects[i].GetComponent<Shape>().Setup(poly, polyProcess);
+        }
     }
 
     void Update()
@@ -69,7 +80,7 @@ public class Collisions : MonoBehaviour
                     max2 = objects[j].GetComponent<AABB>().maxPoint;
 
 
-                    if (CheckCollisionAABB()) // Cambiar por IsCollidingAABB ?
+                    if (CheckCollisionAABB())
                     {
                         objects[i].GetComponent<AABB>().SetColor(Color.red);
                         objects[j].GetComponent<AABB>().SetColor(Color.red);
@@ -102,7 +113,7 @@ public class Collisions : MonoBehaviour
         foreach (Vector3 point in gridAux.grid)
         {
             // Verificar si el punto está dentro de ambos AABB de los modelos
-            if (IsPointInsideAABB(point, obj1) && IsPointInsideAABB(point, obj2))
+            if (IsPointInModel(point, obj1.GetComponent<Shape>().polyProcess) && IsPointInModel(point, obj2.GetComponent<Shape>().polyProcess))
             {
                 return true;
             }
@@ -110,13 +121,8 @@ public class Collisions : MonoBehaviour
         return false;
     }
 
-    bool IsPointInsideAABB(Vector3 point, GameObject obj)
+    bool IsPointInModel(Vector3 point, Geometry.PolygonProcess polyProcess)
     {
-        Vector3 min = obj.GetComponent<AABB>().minPoint;
-        Vector3 max = obj.GetComponent<AABB>().maxPoint;
-
-        return point.x >= min.x && point.x <= max.x &&
-               point.y >= min.y && point.y <= max.y &&
-               point.z >= min.z && point.z <= max.z;
+        return polyProcess.IsPointInPolygon(point);
     }
 }

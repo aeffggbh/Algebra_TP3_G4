@@ -5,7 +5,6 @@ using UnityEngine;
 [ExecuteAlways]
 public class AABB : MonoBehaviour
 { 
-    [SerializeField] GameObject figure_test;
     [SerializeField] Vector3[] vertices_test;
 
     Vector3[] vertices;
@@ -19,7 +18,7 @@ public class AABB : MonoBehaviour
     private void Awake()
     {
         // Obtener el mesh del objeto
-        Mesh mesh = GetComponentInChildren<MeshFilter>().mesh;
+        Mesh mesh = GetComponentInChildren<MeshFilter>().sharedMesh;
         vertices = mesh.vertices;
         // Transformar el primer vertice a coordenadas globales
         worldVertex = transform.TransformPoint(vertices[0]);

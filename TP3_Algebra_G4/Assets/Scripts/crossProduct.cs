@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteAlways]
 public class CrossProduct : MonoBehaviour
 {
     private Vector3 center;
