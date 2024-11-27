@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [ExecuteAlways]
 public class CrossProduct : MonoBehaviour
 {
+    Mesh mesh;
     struct MyRay
     {
         //start
@@ -35,7 +37,6 @@ public class CrossProduct : MonoBehaviour
 
     public void CalculateNormals()
     {
-        Mesh mesh = new();
 
         if (Application.isPlaying)
             mesh = GetComponentInChildren<MeshFilter>().mesh;
@@ -44,9 +45,7 @@ public class CrossProduct : MonoBehaviour
 
         Vector3[] vertices = mesh.vertices;
         //guarda los indices en orden para iterar los triangulos correctamente
-        //me sirve para saber cuantos triangulos hay
         int[] triangles = mesh.triangles;
-
 
         // Obtener el centro del modelo en coordenadas globales
         center = GetComponentInChildren<MeshRenderer>().bounds.center;
@@ -73,18 +72,20 @@ public class CrossProduct : MonoBehaviour
 
             myPlanes.Add(thisPlane);
 
-            // Calcular la normal del triángulo usando el producto cruzado
-            Vector3 normal = myCrossProduct(vertex2 - vertex1, vertex3 - vertex1).normalized;
+            //OPERATION TO DRAW THE NORMALS!!!
 
-            // Asegurar que la normal apunta hacia el centro del modelo
-            Vector3 directionCenterToFace = center - faceCenter;
-            if (myDotProduct(normal, directionCenterToFace) < 0)
-            {
-                normal = -normal;
-            }
+            //// Calcular la normal del triángulo usando el producto cruzado
+            //Vector3 normal = myCrossProduct(vertex2 - vertex1, vertex3 - vertex1).normalized;
 
-            // Añadir la normal invertida para que apunte al centro
-            normalLines.Add((faceCenter, faceCenter + normal * directionCenterToFace.magnitude));
+            //// Asegurar que la normal apunta hacia el centro del modelo
+            //Vector3 directionCenterToFace = center - faceCenter;
+            //if (myDotProduct(normal, directionCenterToFace) < 0)
+            //{
+            //    normal = -normal;
+            //}
+
+            //// Añadir la normal invertida para que apunte al centro
+            //normalLines.Add((faceCenter, faceCenter + normal * directionCenterToFace.magnitude));
         }
     }
 
@@ -191,14 +192,42 @@ public class CrossProduct : MonoBehaviour
         Gizmos.color = Color.green;
 
         // Dibujar normal desde el centro de cada cara apuntando al centro del modelo
-        foreach (var line in normalLines)
+        //foreach (var line in normalLines)
+        //{
+        //    Gizmos.DrawLine(line.start, line.end);
+        //}
+
+        foreach (MyPlane plane in myPlanes)
         {
-            Gizmos.DrawLine(line.start, line.end);
+            Gizmos.DrawRay(transform.TransformPoint(mesh.bounds.center), plane.normal);
         }
 
         Gizmos.color = Color.red;
 
-        Gizmos.DrawSphere(center, 0.2f);
+        Gizmos.DrawSphere(center, 0.001f);
+    }
+
+    public void DrawPlane(Vector3 position, Vector3 normal, Color color)
+    {
+        //Vector3 v3;
+        //if (normal.normalized != Vector3.forward)
+        //    v3 = Vector3.Cross(normal, Vector3.forward).normalized * normal.magnitude;
+        //else
+        //    v3 = Vector3.Cross(normal, Vector3.up).normalized * normal.magnitude; 
+
+        //Vector3 corner0 = position + v3;
+        //Vector3 corner2 = position - v3;
+        //Quaternion q = Quaternion.AngleAxis(90.0f, normal);
+        //v3 = q * v3;
+        //Vector3 corner1 = position + v3;
+        //Vector3 corner3 = position - v3;
+        //Debug.DrawLine(corner0, corner2, color);
+        //Debug.DrawLine(corner1, corner3, color);
+        //Debug.DrawLine(corner0, corner1, color);
+        //Debug.DrawLine(corner1, corner2, color);
+        //Debug.DrawLine(corner2, corner3, color);
+        //Debug.DrawLine(corner3, corner0, color);
+        //Debug.DrawRay(position, normal, Color.magenta);
     }
 
     // Producto Cruzado

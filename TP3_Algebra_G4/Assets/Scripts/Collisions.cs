@@ -23,48 +23,10 @@ public class Collisions : MonoBehaviour
         GameObject tempObj = GameObject.Find("CubicGrid");
         grid = tempObj.GetComponent<CubicalGrid>();
 
-        objects = new List<GameObject>();
-
-            //objectToFind = GameObject.Find("dodecahedron");
-
-            //objects.Add(objectToFind);
-
-        objectToFind = GameObject.Find("tetrahedron");
-
-        objects.Add(objectToFind);
-
-        //objectToFind = GameObject.Find("icosahedron");
-
-        //objects.Add(objectToFind);
-
-        //objectToFind = GameObject.Find("cube");
-
-        //objects.Add(objectToFind);
-
-        objectToFind = GameObject.Find("decahedron");
-
-        objects.Add(objectToFind);
-
-        //objectToFind = GameObject.Find("octahedron");
-
-        //objects.Add(objectToFind);
-
         min1 = Vector3.zero;
         min2 = Vector3.zero;
         max1 = Vector3.zero;
         max2 = Vector3.zero;
-
-        //Setup Geometry
-
-        //for (int i = 0; i < objects.Count; i++)
-        //{
-        //    Debug.Log(objects[i].GetComponent<Shape>().vertices);
-
-        //    Geometry.Polygon poly = new(objects[i].GetComponent<Shape>().vertices);
-        //    Geometry.PolygonProcess polyProcess = new(poly);
-
-        //    objects[i].GetComponent<Shape>().Setup(poly, polyProcess);
-        //}
     }
 
     void Update()
@@ -75,43 +37,40 @@ public class Collisions : MonoBehaviour
             {
                 if (i != j)
                 {
-                    min1 = objects[i].GetComponent<AABB>().minPoint;
-                    max1 = objects[i].GetComponent<AABB>().maxPoint;
+                    AABB aABB1 = objects[i].GetComponent<AABB>();
+                    AABB aABB2 = objects[j].GetComponent<AABB>();
 
-                    min2 = objects[j].GetComponent<AABB>().minPoint;
-                    max2 = objects[j].GetComponent<AABB>().maxPoint;
+                    min1 = aABB1.minPoint;
+                    max1 = aABB1.maxPoint;
+
+                    min2 = aABB2.minPoint;
+                    max2 = aABB2.maxPoint;
 
 
                     if (CheckCollisionAABB())
                     {
-                        objects[i].GetComponent<AABB>().SetColor(Color.red);
-                        objects[j].GetComponent<AABB>().SetColor(Color.red);
+                        aABB1.SetColor(Color.red);
+                        aABB2.SetColor(Color.red);
 
-                        // Si hay AABB, chequear colisión por grilla
-
-                        //if (objects[i].GetComponent<Shape>().polyProcess ==null)
-                        //{
-                        //    Debug.Log("NO POLYPROCESS (" + i + ")");
-                        //}
-                        //if (objects[j].GetComponent<Shape>().polyProcess == null)
-                        //{
-                        //    Debug.Log("NO POLYPROCESS (" + j + ")");
-
-                        //}
                         if (CheckGridPointCollision(objects[i], objects[j]))
                         {
-                            objects[i].GetComponent<AABB>().SetColor(Color.magenta);
-                            objects[j].GetComponent<AABB>().SetColor(Color.magenta);
+                            aABB1.SetColor(Color.magenta);
+                            aABB2.SetColor(Color.magenta);
                         }
                     }
-                    //else
-                    //{
-                    //    objects[i].GetComponent<AABB>().SetColor(objects[i].GetComponent<AABB>().defaultColor);
-                    //    objects[j].GetComponent<AABB>().SetColor(objects[j].GetComponent<AABB>().defaultColor);
-                    //}
                 }
             }
 
+        }
+    }
+
+    [ContextMenu("ResetColors")]
+    private void ResetColors()
+    {
+        foreach (GameObject obj in objects)
+        {
+            AABB aABB = obj.GetComponent<AABB>();
+            aABB.SetColor(aABB.defaultColor);
         }
     }
 
