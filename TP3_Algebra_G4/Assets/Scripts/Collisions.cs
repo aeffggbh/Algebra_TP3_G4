@@ -18,7 +18,7 @@ public class Collisions : MonoBehaviour
     Vector3 max1;
     Vector3 max2;
 
-    private void Start()
+    private void Awake()
     {
         GameObject tempObj = GameObject.Find("CubicGrid");
         gridAux = tempObj.GetComponent<CubicalGrid>();
@@ -58,6 +58,8 @@ public class Collisions : MonoBehaviour
 
         for (int i = 0; i < objects.Count; i++)
         {
+            Debug.Log(objects[i].GetComponent<Shape>().vertices);
+
             Geometry.Polygon poly = new(objects[i].GetComponent<Shape>().vertices);
             Geometry.PolygonProcess polyProcess = new(poly);
 
@@ -92,6 +94,11 @@ public class Collisions : MonoBehaviour
                             objects[j].GetComponent<AABB>().SetColor(Color.magenta);
                         }
                     }
+                    //else
+                    //{
+                    //    objects[i].GetComponent<AABB>().SetColor(objects[i].GetComponent<AABB>().defaultColor);
+                    //    objects[j].GetComponent<AABB>().SetColor(objects[j].GetComponent<AABB>().defaultColor);
+                    //}
                 }
             }
 
@@ -123,6 +130,9 @@ public class Collisions : MonoBehaviour
 
     bool IsPointInModel(Vector3 point, Geometry.PolygonProcess polyProcess)
     {
+        if (polyProcess == null)
+            return false;
+
         return polyProcess.IsPointInPolygon(point);
     }
 }

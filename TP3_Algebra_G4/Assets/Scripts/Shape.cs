@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class Shape : MonoBehaviour
 {
     public Geometry.Polygon poly;
@@ -12,9 +13,13 @@ public class Shape : MonoBehaviour
 
     private void Awake()
     {
+
         vertices = new List<Vector3>();
 
-        mesh = GetComponentInChildren<MeshFilter>().mesh;
+        mesh = GetComponentInChildren<MeshFilter>().sharedMesh;
+
+        if (mesh.vertices == null)
+            print("mesh is null");
 
         for (int i = 0; i < mesh.vertices.Length; i++)
         {

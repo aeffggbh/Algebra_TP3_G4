@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
-using static Geometry;
 
-public class Geometry
+public static class Geometry
 {
     static double maxMarginOfError = 0.001;
 
@@ -140,6 +139,8 @@ public class Geometry
                 this.vertices.Add(vertices[i]);
                 this.indexes.Add(i);
             }
+
+            Debug.Log("create poly");
         }
     }
 
@@ -387,6 +388,9 @@ public class Geometry
         public PolygonProcess(Polygon polygon)
         {
             this.polygon = polygon;
+
+            this.faces = new List<Face>();
+            this.planes = new List<Plane>();
 
             SetBoundaries();
             SetMarginOfError();

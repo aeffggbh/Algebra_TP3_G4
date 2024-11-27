@@ -13,7 +13,6 @@ public class CubicalGrid : MonoBehaviour
     float x;
     float y;
     float z;
-    float generalMagnitude;
 
     float radius;
 
@@ -46,8 +45,6 @@ public class CubicalGrid : MonoBehaviour
         max = rows * height;
 
         grid = new Vector3[max];
-
-        generalMagnitude = 50.0f;
 
         space = 0.5f;
 
