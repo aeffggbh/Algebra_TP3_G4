@@ -31,8 +31,6 @@ public static class Geometry
 
         public static Vector GetMul(Vector u, Vector v)
         {
-
-
             float x = u.y * v.z - u.z * v.y;
             float y = u.z * v.x - u.x * v.z;
             float z = u.x * v.y - u.y * v.x;
@@ -368,6 +366,7 @@ public static class Geometry
 
         public bool IsPointInPolygon(Vector3 point)
         {
+
             for (int i = 0; i < facesAmount; i++)
             {
                 double dis = Plane.GetMul(planes[i], point);

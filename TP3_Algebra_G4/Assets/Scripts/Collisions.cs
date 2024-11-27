@@ -11,7 +11,7 @@ public class Collisions : MonoBehaviour
 
     public GameObject objectToFind;
 
-    public CubicalGrid gridAux;
+    public CubicalGrid grid;
 
     Vector3 min1;
     Vector3 min2;
@@ -21,33 +21,33 @@ public class Collisions : MonoBehaviour
     private void Awake()
     {
         GameObject tempObj = GameObject.Find("CubicGrid");
-        gridAux = tempObj.GetComponent<CubicalGrid>();
+        grid = tempObj.GetComponent<CubicalGrid>();
 
         objects = new List<GameObject>();
 
-        objectToFind = GameObject.Find("dodecahedron");
+            //objectToFind = GameObject.Find("dodecahedron");
 
-        objects.Add(objectToFind);
+            //objects.Add(objectToFind);
 
         objectToFind = GameObject.Find("tetrahedron");
 
         objects.Add(objectToFind);
 
-        objectToFind = GameObject.Find("icosahedron");
+        //objectToFind = GameObject.Find("icosahedron");
 
-        objects.Add(objectToFind);
+        //objects.Add(objectToFind);
 
-        objectToFind = GameObject.Find("cube");
+        //objectToFind = GameObject.Find("cube");
 
-        objects.Add(objectToFind);
+        //objects.Add(objectToFind);
 
         objectToFind = GameObject.Find("decahedron");
 
         objects.Add(objectToFind);
 
-        objectToFind = GameObject.Find("octahedron");
+        //objectToFind = GameObject.Find("octahedron");
 
-        objects.Add(objectToFind);
+        //objects.Add(objectToFind);
 
         min1 = Vector3.zero;
         min2 = Vector3.zero;
@@ -56,15 +56,15 @@ public class Collisions : MonoBehaviour
 
         //Setup Geometry
 
-        for (int i = 0; i < objects.Count; i++)
-        {
-            Debug.Log(objects[i].GetComponent<Shape>().vertices);
+        //for (int i = 0; i < objects.Count; i++)
+        //{
+        //    Debug.Log(objects[i].GetComponent<Shape>().vertices);
 
-            Geometry.Polygon poly = new(objects[i].GetComponent<Shape>().vertices);
-            Geometry.PolygonProcess polyProcess = new(poly);
+        //    Geometry.Polygon poly = new(objects[i].GetComponent<Shape>().vertices);
+        //    Geometry.PolygonProcess polyProcess = new(poly);
 
-            objects[i].GetComponent<Shape>().Setup(poly, polyProcess);
-        }
+        //    objects[i].GetComponent<Shape>().Setup(poly, polyProcess);
+        //}
     }
 
     void Update()
@@ -88,6 +88,16 @@ public class Collisions : MonoBehaviour
                         objects[j].GetComponent<AABB>().SetColor(Color.red);
 
                         // Si hay AABB, chequear colisión por grilla
+
+                        //if (objects[i].GetComponent<Shape>().polyProcess ==null)
+                        //{
+                        //    Debug.Log("NO POLYPROCESS (" + i + ")");
+                        //}
+                        //if (objects[j].GetComponent<Shape>().polyProcess == null)
+                        //{
+                        //    Debug.Log("NO POLYPROCESS (" + j + ")");
+
+                        //}
                         if (CheckGridPointCollision(objects[i], objects[j]))
                         {
                             objects[i].GetComponent<AABB>().SetColor(Color.magenta);
@@ -117,22 +127,20 @@ public class Collisions : MonoBehaviour
 
     bool CheckGridPointCollision(GameObject obj1, GameObject obj2)
     {
-        foreach (Vector3 point in gridAux.grid)
+        foreach (Vector3 point in grid.grid)
         {
             // Verificar si el punto está dentro de ambos AABB de los modelos
-            if (IsPointInModel(point, obj1.GetComponent<Shape>().polyProcess) && IsPointInModel(point, obj2.GetComponent<Shape>().polyProcess))
+            if (IsPointInModel(point, obj1.GetComponent<CrossProduct>()) && IsPointInModel(point, obj2.GetComponent<CrossProduct>()))
             {
+                Debug.Log(point);
                 return true;
             }
         }
         return false;
     }
 
-    bool IsPointInModel(Vector3 point, Geometry.PolygonProcess polyProcess)
+    bool IsPointInModel(Vector3 point, CrossProduct product)
     {
-        if (polyProcess == null)
-            return false;
-
-        return polyProcess.IsPointInPolygon(point);
+        return product.IsPointInsideModel(point);
     }
 }
