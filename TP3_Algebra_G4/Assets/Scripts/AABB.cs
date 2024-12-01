@@ -60,11 +60,7 @@ public class AABB : MonoBehaviour
     // Dibujar usando Gizmos
     void OnDrawGizmos()
     {
-        // Calcular la AABB si no esta calculada
-        if (minPoint == Vector3.zero && maxPoint == Vector3.zero)
-        {
-            CalculateAABB();
-        }
+       
         Gizmos.color = color;
 
         // Dibujar los bordes de la AABB usando las esquinas de la box

@@ -33,33 +33,37 @@ public class Collisions : MonoBehaviour
     {
         for (int i = 0; i < objects.Count; i++)
         {
-            for (int j = 0; j < objects.Count; j++)
-            {
-                if (i != j)
+            if (CheckGridAABBCollision(objects[i]))
+                for (int j = 0; j < objects.Count; j++)
                 {
-                    AABB aABB1 = objects[i].GetComponent<AABB>();
-                    AABB aABB2 = objects[j].GetComponent<AABB>();
-
-                    min1 = aABB1.minPoint;
-                    max1 = aABB1.maxPoint;
-
-                    min2 = aABB2.minPoint;
-                    max2 = aABB2.maxPoint;
-
-
-                    if (CheckCollisionAABB())
+                    if (CheckGridAABBCollision(objects[j]))
                     {
-                        aABB1.SetColor(Color.red);
-                        aABB2.SetColor(Color.red);
-
-                        if (CheckGridPointCollision(objects[i], objects[j]))
+                        if (i != j)
                         {
-                            aABB1.SetColor(Color.magenta);
-                            aABB2.SetColor(Color.magenta);
+                            AABB aABB1 = objects[i].GetComponent<AABB>();
+                            AABB aABB2 = objects[j].GetComponent<AABB>();
+
+                            min1 = aABB1.minPoint;
+                            max1 = aABB1.maxPoint;
+
+                            min2 = aABB2.minPoint;
+                            max2 = aABB2.maxPoint;
+
+
+                            if (CheckCollisionAABB())
+                            {
+                                aABB1.SetColor(Color.red);
+                                aABB2.SetColor(Color.red);
+
+                                if (CheckGridPointCollision(objects[i], objects[j]))
+                                {
+                                    aABB1.SetColor(Color.magenta);
+                                    aABB2.SetColor(Color.magenta);
+                                }
+                            }
                         }
                     }
                 }
-            }
 
         }
     }
@@ -101,5 +105,28 @@ public class Collisions : MonoBehaviour
     bool IsPointInModel(Vector3 point, CrossProduct product)
     {
         return product.IsPointInsideModel(point);
+    }
+
+    bool CheckGridAABBCollision(GameObject aABB)
+    {
+        foreach (Vector3 point in grid.grid)
+        {
+            // Verificar si el punto está dentro de ambos AABB de los modelos
+            if (IsPointInsideAABB(point, aABB))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool IsPointInsideAABB(Vector3 point, GameObject obj)
+    {
+        Vector3 min = obj.GetComponent<AABB>().minPoint;
+        Vector3 max = obj.GetComponent<AABB>().maxPoint;
+
+        return point.x >= min.x && point.x <= max.x &&
+               point.y >= min.y && point.y <= max.y &&
+               point.z >= min.z && point.z <= max.z;
     }
 }

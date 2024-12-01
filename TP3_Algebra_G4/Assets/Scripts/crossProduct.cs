@@ -55,7 +55,6 @@ public class CrossProduct : MonoBehaviour
             //Un objeto 3d puede utilizar el mismo vertice para varios triangulos
             //por eso consigo los indices, ellos son el orden en el que estan los vertices de cada triangulo
 
-            //solo hay una mesh, entonces agarro la mesh 0.
             //Los indices me dicen los vertices que necesito para formar un triangulo (por eso los recorro de a 3)
             int index1 = mesh.triangles[i];
             int index2 = mesh.triangles[i + 1];

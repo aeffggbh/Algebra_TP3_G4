@@ -4,6 +4,10 @@ public class MyPlane
 {
     public Vector3 normal;
 
+    /// <summary>
+    /// Guardo el triangulo que me ayuda a determinar donde el plano limita el espacio (en qué ubicacion, no quiere decir
+    /// que estos vertices sean sus limites, ya que los planos son infinitos)
+    /// </summary>
     public Vector3 verA;
     public Vector3 verB;
     public Vector3 verC;
@@ -40,6 +44,7 @@ public class MyPlane
     public void UpdatePlane(Vector3 vertex1, Vector3 vertex2, Vector3 vertex3)
     {
         this.normal = Vector3.Cross(vertex2 - vertex1, vertex3 - vertex1).normalized;
+        
         this.distance = Vector3.Dot(this.normal, vertex1);
 
         verA = vertex1;
@@ -63,6 +68,6 @@ public class MyPlane
     }
 
 
-}
+}   
 
 

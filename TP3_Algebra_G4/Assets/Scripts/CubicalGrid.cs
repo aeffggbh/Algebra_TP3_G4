@@ -116,7 +116,7 @@ public class CubicalGrid : MonoBehaviour
         {
             Gizmos.DrawSphere(grid[j], radius);
         }
-        
+
     }
 
     private void OnDrawGizmos()
