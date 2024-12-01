@@ -103,11 +103,6 @@ public class CubicalGrid : MonoBehaviour
         radius = 0.03f;
     }
 
-    public void BuildCube()
-    {
-
-    }
-
     public void DrawGrid()
     {
         Gizmos.color = Color.gray;

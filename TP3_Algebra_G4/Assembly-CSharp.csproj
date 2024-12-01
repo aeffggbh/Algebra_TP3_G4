@@ -61,8 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\crossProduct.cs" />
-    <Compile Include="Assets\Scripts\Geometry.cs" />
-    <Compile Include="Assets\Scripts\Shape.cs" />
     <Compile Include="Assets\basic_movement.cs" />
     <Compile Include="Assets\Scripts\MyPlane.cs" />
     <Compile Include="Assets\Scripts\CubicalGrid.cs" />
