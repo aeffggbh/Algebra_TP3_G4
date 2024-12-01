@@ -4,16 +4,16 @@ using UnityEngine;
 
 [ExecuteAlways]
 public class AABB : MonoBehaviour
-{ 
-    [SerializeField] Vector3[] vertices_test;
-
+{
+    #region vars
     Vector3[] vertices;
     Vector3 worldVertex;
-    Mesh mesh;
     public Vector3 minPoint;
     public Vector3 maxPoint;
     public Color color;
     public Color defaultColor;
+
+    #endregion
 
     private void Awake()
     {
@@ -39,8 +39,6 @@ public class AABB : MonoBehaviour
 
     void CalculateAABB()
     {
-        vertices_test = vertices;
-
         // Inicializar minPoint y maxPoint con el primer vertice transformado
         minPoint = worldVertex;
         maxPoint = worldVertex;
@@ -60,7 +58,6 @@ public class AABB : MonoBehaviour
     // Dibujar usando Gizmos
     void OnDrawGizmos()
     {
-       
         Gizmos.color = color;
 
         // Dibujar los bordes de la AABB usando las esquinas de la box

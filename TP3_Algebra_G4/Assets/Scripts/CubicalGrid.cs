@@ -10,6 +10,8 @@ using UnityEngine;
 [ExecuteAlways]
 public class CubicalGrid : MonoBehaviour
 {
+    //-
+    #region vars
     float x;
     float y;
     float z;
@@ -18,8 +20,8 @@ public class CubicalGrid : MonoBehaviour
 
     Vector3 location;
 
-    int rows;
-    int height;
+    int floorSize;
+    int floorsAmount;
     int max;
     int rowsStart;
 
@@ -29,30 +31,32 @@ public class CubicalGrid : MonoBehaviour
     int verPoints;
 
     float space;
-    int currentSphere;
+    int currentHorizontalPoint;
+    #endregion
 
     public Vector3[] grid;
 
     private void Awake()
     {
-        horPoints = 20;
-        verPoints = 20;
+        //un piso de la grilla
+        horPoints = 30;
+        verPoints = 30;
+        floorSize = horPoints * verPoints;
 
-        rows = (horPoints * verPoints) + verPoints;
+        //la altura de la grilla (cuántos pisos son)
+        floorsAmount = verPoints/2;
 
-        height = verPoints;
+        max = floorSize * floorsAmount;
 
-        max = rows * height;
-
+        //-
         grid = new Vector3[max];
 
         space = 0.5f;
 
         moveY = 0.0f;
-
         rowsStart = 0;
 
-        for (int i = 0; i < height; i++)
+        for (int currentFloor = 0; currentFloor < floorsAmount; currentFloor++)
         {
 
             location = new(0, moveY, 0);
@@ -62,7 +66,6 @@ public class CubicalGrid : MonoBehaviour
                 grid[j] = location;
 
                 location.x += space;
-
             }
 
             location = new(0, moveY, 0);
@@ -77,15 +80,18 @@ public class CubicalGrid : MonoBehaviour
             location.x += space;
             location.z += space;
 
-            currentSphere = 0;
+            currentHorizontalPoint = 0;
             //the rest of the points
-            for (int j = rowsStart + horPoints + verPoints; j < rowsStart + rows; j++)
+            for (int j = rowsStart + horPoints + verPoints; j < rowsStart + floorSize; j++)
             {
-                if (currentSphere < horPoints)
-                    currentSphere++;
+                //cada vez que termina de hacer una fila en horizontal (manejado por currentSphere)
+                //procede a hacer la fila vertical (sumandole en z y poniendole la x en 0 nuevamente)
+
+                if (currentHorizontalPoint < horPoints)
+                    currentHorizontalPoint++;
                 else
                 {
-                    currentSphere = 0;
+                    currentHorizontalPoint = 0;
                     location.z += space;
                     location.x = 0;
                 }
@@ -95,9 +101,11 @@ public class CubicalGrid : MonoBehaviour
                 grid[j] = location;
             }
 
+            //mueve en y
             moveY += space;
 
-            rowsStart += rows;
+            //posiciona en el arreglo
+            rowsStart += floorSize;
         }
 
         radius = 0.03f;

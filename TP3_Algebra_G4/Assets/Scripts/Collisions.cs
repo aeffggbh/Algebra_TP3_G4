@@ -9,24 +9,15 @@ public class Collisions : MonoBehaviour
 {
     public List<GameObject> objects;
 
-    public GameObject objectToFind;
-
     public CubicalGrid grid;
 
-    Vector3 min1;
-    Vector3 min2;
-    Vector3 max1;
-    Vector3 max2;
+    //-
+    public GameObject objectToFind;
 
     private void Awake()
     {
         GameObject tempObj = GameObject.Find("CubicGrid");
         grid = tempObj.GetComponent<CubicalGrid>();
-
-        min1 = Vector3.zero;
-        min2 = Vector3.zero;
-        max1 = Vector3.zero;
-        max2 = Vector3.zero;
     }
 
     void Update()
@@ -43,14 +34,7 @@ public class Collisions : MonoBehaviour
                             AABB aABB1 = objects[i].GetComponent<AABB>();
                             AABB aABB2 = objects[j].GetComponent<AABB>();
 
-                            min1 = aABB1.minPoint;
-                            max1 = aABB1.maxPoint;
-
-                            min2 = aABB2.minPoint;
-                            max2 = aABB2.maxPoint;
-
-
-                            if (CheckCollisionAABB())
+                            if (CheckCollisionAABB(aABB1, aABB2))
                             {
                                 aABB1.SetColor(Color.red);
                                 aABB2.SetColor(Color.red);
@@ -78,14 +62,14 @@ public class Collisions : MonoBehaviour
         }
     }
 
-    private bool CheckCollisionAABB()
+    private bool CheckCollisionAABB(AABB aABB1, AABB aABB2)
     {
-        return max1.x > min2.x &&
-               min1.x < max2.x &&
-               max1.y > min2.y &&
-               min1.y < max2.y &&
-               max1.z > min2.z &&
-               min1.z < max2.z;
+        return aABB1.maxPoint.x > aABB2.minPoint.x &&
+               aABB1.minPoint.x < aABB2.maxPoint.x &&
+               aABB1.maxPoint.y > aABB2.minPoint.y &&
+               aABB1.minPoint.y < aABB2.maxPoint.y &&
+               aABB1.maxPoint.z > aABB2.minPoint.z &&
+               aABB1.minPoint.z < aABB2.maxPoint.z;
     }
 
     bool CheckGridPointCollision(GameObject obj1, GameObject obj2)
@@ -93,16 +77,15 @@ public class Collisions : MonoBehaviour
         foreach (Vector3 point in grid.grid)
         {
             // Verificar si el punto está dentro de ambos AABB de los modelos
-            if (IsPointInModel(point, obj1.GetComponent<CrossProduct>()) && IsPointInModel(point, obj2.GetComponent<CrossProduct>()))
+            if (IsPointInModel(point, obj1.GetComponent<PlaneHandler>()) && IsPointInModel(point, obj2.GetComponent<PlaneHandler>()))
             {
-                Debug.Log(point);
                 return true;
             }
         }
         return false;
     }
 
-    bool IsPointInModel(Vector3 point, CrossProduct product)
+    bool IsPointInModel(Vector3 point, PlaneHandler product)
     {
         return product.IsPointInsideModel(point);
     }
