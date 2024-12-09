@@ -64,18 +64,6 @@ public class PlaneHandler : MonoBehaviour
             MyPlane thisPlane = new(vertex1, vertex2, vertex3);
 
             myPlanes.Add(thisPlane);
-
-            //OPERATION TO DRAW THE NORMALS!!!
-            //// Calcular la normal del triángulo usando el producto cruzado
-            //Vector3 normal = myCrossProduct(vertex2 - vertex1, vertex3 - vertex1).normalized;
-            //// Asegurar que la normal apunta hacia el centro del modelo
-            //Vector3 directionCenterToFace = center - faceCenter;
-            //if (myDotProduct(normal, directionCenterToFace) < 0)
-            //{
-            //    normal = -normal;
-            //}
-            //// Añadir la normal invertida para que apunte al centro
-            //normalLines.Add((faceCenter, faceCenter + normal * directionCenterToFace.magnitude));
         }
     }
 
@@ -102,7 +90,7 @@ public class PlaneHandler : MonoBehaviour
             if (IsPointInPlane(plane, ray, out Vector3 myPoint))
             {
                 //Esta dentro del triangulo de la mesh?
-                if (IsPointReallyInPlane(plane, myPoint))
+                if (IsPointReallyInModel(plane, myPoint))
                 {
                     //se suma una interseccion
                     counter++;
@@ -130,24 +118,20 @@ public class PlaneHandler : MonoBehaviour
         //Inicializacion del punto donde van a colisionar en 0,0,0 para empezar
         point = Vector3.zero;
 
-        //obtengo el coseno entre el plano y el destino si es menor a cero esta ubicado
-        //en el lado opuesto de la normal del plano
-        //de donde origina el ray? eso lo verifica con el destino del ray
-        float distance = MyDotProduct(plane.normal, ray.destination);
-        if (Mathf.Abs(distance) > Vector3.kEpsilon)
-        {
-            // distance between the ray origin (the point) and the plane (entre 0 y la distancia y lo divido por la distancia para normalizarlo)
-            // Ejemplo: El coseno me dio 35 y la distancia es 40 entonces hago 35/40 y me da un numero entre 0 y 1
-            // Si el margen da mayor a cero significa que hay un punto donde colisionó el ray
-            //t
-            float fractionOfRay = MyDotProduct((plane.normal * plane.distance - ray.origin), plane.normal) / distance;
+        //Si da 0 no comparten ningun punto (no chocan)
+        float dot = MyDotProduct(plane.normal, ray.destination);
+        if (Mathf.Abs(dot) > Vector3.kEpsilon)
+        { 
+            // distance between the ray origin (the point) and the plane (porcentaje del rayo entre 0 y 1 para llegar al plano)
+            float fractionOfRay = MyDotProduct((plane.normal * plane.distance - ray.origin), plane.normal) / dot;
+            
             if (fractionOfRay >= Vector3.kEpsilon)
             {
                 //punto medio entre el origen y el destino.
                 // if the fraction was 0.5 I'd get the half
-                // INTERPOLACION ENTRE EL INICIO Y EL FINAL (lerp)
                 point = ray.origin + ray.destination * fractionOfRay;
-                return true;
+               
+
             }
         }
         return false;
@@ -160,7 +144,7 @@ public class PlaneHandler : MonoBehaviour
     /// <param name="plane"></param>
     /// <param name="point"></param>
     /// <returns></returns>
-    private bool IsPointReallyInPlane(MyPlane plane, Vector3 point)
+    private bool IsPointReallyInModel(MyPlane plane, Vector3 point)
     {
         float x1 = plane.verA.x; float y1 = plane.verA.y;
         float x2 = plane.verB.x; float y2 = plane.verB.y;
@@ -206,6 +190,12 @@ public class PlaneHandler : MonoBehaviour
             );
     }
 
+    /// <summary>
+    /// https://es.khanacademy.org/math/multivariable-calculus/thinking-about-multivariable-function/x786f2022:vectors-and-matrices/a/dot-products-mvc
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
     public static float MyDotProduct(Vector3 a, Vector3 b)
     {
         return a.x * b.x +

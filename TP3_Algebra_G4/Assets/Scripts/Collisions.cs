@@ -62,8 +62,15 @@ public class Collisions : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// https://www.miguelcasillas.com/?p=30
+    /// </summary>
+    /// <param name="aABB1"></param>
+    /// <param name="aABB2"></param>
+    /// <returns></returns>
     private bool CheckCollisionAABB(AABB aABB1, AABB aABB2)
     {
+        //Check if Box1's max is greater than Box2's min and Box1's min is less than Box2's max
         return aABB1.maxPoint.x > aABB2.minPoint.x &&
                aABB1.minPoint.x < aABB2.maxPoint.x &&
                aABB1.maxPoint.y > aABB2.minPoint.y &&
@@ -76,7 +83,6 @@ public class Collisions : MonoBehaviour
     {
         foreach (Vector3 point in grid.grid)
         {
-            // Verificar si el punto está dentro de ambos AABB de los modelos
             if (IsPointInModel(point, obj1.GetComponent<PlaneHandler>()) && IsPointInModel(point, obj2.GetComponent<PlaneHandler>()))
             {
                 return true;
@@ -85,9 +91,9 @@ public class Collisions : MonoBehaviour
         return false;
     }
 
-    bool IsPointInModel(Vector3 point, PlaneHandler product)
+    bool IsPointInModel(Vector3 point, PlaneHandler handler)
     {
-        return product.IsPointInsideModel(point);
+        return handler.IsPointInsideModel(point);
     }
 
     bool CheckGridAABBCollision(GameObject aABB)
